@@ -1,0 +1,17 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="feed-container">
+    <div class="post-card">
+        <h1>{{ post.title }}</h1>
+        <p><small>Просмотров: {{ post.views_count }}</small></p>
+        {% if post.image_url %}
+            <img src="{{ post.image_url }}" alt="{{ post.title }}" class="post-image">
+        {% endif %}
+        <div class="post-content expanded"> <!-- Сразу раскрыт -->
+            {{ post.content|linebreaks }}
+        </div>
+    </div>
+</div>
+{% endblock %}

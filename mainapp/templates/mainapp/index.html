@@ -1,0 +1,63 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+
+{% block content %}
+    <!-- Этот контейнер теперь будет центрироваться благодаря стилям в CSS -->
+    <div class="feed-container">
+        {% if user.is_authenticated and user.is_superuser %}
+        <div class="admin-create-panel">
+            <button class="btn-create-post" id="createPostBtn">Создать новый пост</button>
+        </div>
+        {% endif %}
+
+        {% for post in posts %}
+        <div class="post-card" data-post-id="{{ post.pk }}">
+
+            <!-- Панель редактирования, видимая только для админа -->
+
+
+            <div class="post-title-container">
+                <!-- Вот элемент, который мы будем редактировать -->
+                <h2 class="editable" data-field="title">{{ post.title }}</h2>
+                 {% if user.is_authenticated and user.is_superuser %}
+                    <div class="admin-edit-panel">
+                        <label class="pin-label">
+                            Закрепить: <input type="checkbox" class="pin-checkbox" {% if post.is_pinned %}checked{% endif %}>
+                        </label>
+                        <button class="edit-btn">Редактировать</button>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="post-media-gallery editable" data-field="media_files">
+                {% for media in post.media_files.all %}
+                <div class="media-item">
+                    <!-- ШАГ 1: ПРОВЕРКА -->
+                {% if media.is_video %}
+                    <!-- ШАГ 2A: ВЫВОД ВИДЕО -->
+                    <video controls muted class="post-video" data-media-id="{{ media.pk }}">
+                        <source src="{{ media.file.url }}" type="video/mp4">
+                    </video>
+                {% else %}
+                    <!-- ШАГ 2B: ВЫВОД КАРТИНКИ -->
+                    <img src="{{ media.file.url }}" alt="Медиафайл" class="post-image" data-media-id="{{ media.pk }}">
+                {% endif %}
+
+            </div>
+        {% endfor %}
+            </div>
+            <!-- Связываем контент и кнопку через data-content-id -->
+            <div class="post-content editable" data-field="content" data-content-id="post-{{ post.pk }}">
+                <!-- Показываем полный текст, JS сам его скроет если нужно -->
+                {{ post.content|linebreaks }}
+            </div>
+
+            <!-- Кнопка "показать далее" появляется только если слов больше 30 -->
+            {% if post.content|wordcount > 3 %}
+                <span class="read-more" data-target-id="post-{{ post.pk }}">...показать далее</span>
+            {% endif %}
+            <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
+
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}

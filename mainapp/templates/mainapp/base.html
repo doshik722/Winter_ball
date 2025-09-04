@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Зимний Бал{% endblock %}</title>
+    <!-- Подключаем стили -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    {% csrf_token %}
+    <div class="video-background">
+        <video autoplay muted loop playsinline>
+            <source src="{% static 'img/background.mp4' %}" type="video/mp4">
+            Ваш браузер не поддерживает видео.
+        </video>
+    </div>
+    <!-- Меню, вынесенное из потока документа -->
+    <div class="menu-container" id="menu-container">
+        <nav class="menu-nav">
+            <a href="{% url 'auction' %}">Благотворительный аукцион</a>
+            <a href="{% url 'history' %}">Как это было</a>
+            <a href="{% url 'media-gallery' %}">Фото и Видео</a>
+        </nav>
+        <div class="menu-icon" id="menu-icon">☰</div>
+    </div>
+
+    <!-- Основной контейнер для всего контента -->
+    <div class="page-wrapper">
+        <header class="main-header">
+            <h1>Зимний бал 2025</h1>
+        </header>
+
+        <main class="content-area">
+            {% block content %}
+            <!-- Сюда будет вставляться контент дочерних шаблонов -->
+            {% endblock %}
+        </main>
+    </div>
+
+    <!-- Подключаем JS в конце body для лучшей производительности -->
+    <script src="{% static 'js/main.js' %}"></script>
+
+     <!-- НОВОЕ МОДАЛЬНОЕ ОКНО для создания поста (изначально скрыто) -->
+    <div class="modal-overlay" id="createPostModal">
+        <div class="modal-content">
+            <form id="createPostForm" action="{% url 'api-create-post' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <h3>Создание нового поста</h3>
+                <div class="form-body">
+                    <input type="text" name="title" placeholder="Заголовок поста" required>
+                    <textarea name="content" rows="10" placeholder="Содержимое поста"></textarea>
+
+                    <div class="form-group">
+                        <label>Прикрепите медиафайлы:</label>
+                        <input type="file" name="media_files" multiple>
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" name="is_pinned" id="id_is_pinned">
+                        <label for="id_is_pinned">Закрепить пост</label>
+                    </div>
+
+                    <button type="submit">Создать пост</button>
+                    <button type="button" class="btn-close">Закрыть</button>
+                </div>
+                <div class="form-success-message" style="display: none;">
+                    <p>Пост успешно создан! Страница будет перезагружена.</p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        window.djangoData = {
+            trailImages: [
+                "{% static 'img/star.png' %}",
+                // Добавьте сюда другие картинки для следа, если нужно
+            ]
+        };
+    </script>
+
+    <script src="{% static 'js/main.js' %}"></script>
+
+</body>
+</html>

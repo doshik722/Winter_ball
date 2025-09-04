@@ -1,0 +1,115 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+
+{% block title %}Благотворительный аукцион{% endblock %}
+
+{% block content %}
+<div class="auction-page">
+    <div class="auction-header">
+        <h2>Лоты аукциона</h2>
+        <button class="btn-add-lot" id="addLotBtn">Добавить свой лот</button>
+    </div>
+
+    <div class="lots-container">
+        {% for lot in lots %}
+        <div class="lot-card" data-lot-id="{{ lot.pk }}">
+            <div class="lot-media">
+                <!-- Отображаем первый медиафайл, проверяя его тип -->
+                {% with lot.media_files.first as media %}
+                    {% if media %}
+                        <!-- Проверяем, является ли файл видео -->
+                        {% if media.is_video %}
+                            <video muted loop playsinline class="lot-video">
+                                <!-- ИСПРАВЛЕНИЕ: используем media.file.url -->
+                                <source src="{{ media.file.url }}" type="video/mp4">
+                            </video>
+                        {% else %}
+                            <img src="{{ media.file.url }}" alt="{{ lot.title }}" class="lot-image">
+                        {% endif %}
+                    {% else %}
+                        <!-- Если медиафайлов нет, показываем "заглушку" -->
+                        <img src="{% static 'images/placeholder.png' %}" alt="Нет изображения">
+                    {% endif %}
+                {% endwith %}
+            </div>
+
+            <h3>{{ lot.title }}</h3>
+
+            <!-- Добавляем data-атрибуты для кнопки "показать далее" -->
+            <div class="lot-description" data-content-id="lot-{{ lot.pk }}">
+                {{ lot.description|linebreaks }}
+            </div>
+            {% if lot.description|wordcount > 20 %}
+                <span class="read-more" data-target-id="lot-{{ lot.pk }}">...показать далее</span>
+            {% endif %}
+
+            <button class="btn-make-bid">Предложить ставку</button>
+        </div>
+        {% endfor %}
+    </div>
+
+<!-- Модальное окно для добавления лота (изначально скрыто) -->
+<div class="modal-overlay" id="addLotModal">
+    <div class="modal-content">
+        <form id="lotRequestForm" action="{% url 'api-create-lot-request' %}" method="POST" >
+            {% csrf_token %}
+            <h3>Заявка на добавление лота</h3>
+            <div class="form-body">
+                <input type="text" name="author_name" placeholder="Ваше ФИО" required>
+                <input type="tel" name="mobile_phone" placeholder="Ваш номер телефона" required>
+                <!-- Убираем required, так как поле необязательное -->
+                <input type="text" name="reestr_number" placeholder="Ваш реестровый номер (необязательно)">
+                <input type="email" name="author_email" placeholder="Ваш Email" required>
+                <input type="text" name="lot_title" placeholder="Название лота" required>
+                <textarea name="lot_description" placeholder="Описание лота" required></textarea>
+                <div class="form-group">
+                    <label for="id_lot_files">Прикрепите фото/видео (можно выбрать несколько):</label>
+                    <input type="file" name="lot_files" id="id_lot_files" multiple required>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" name="privacy_policy_accepted" id="id_privacy_policy_accepted" required>
+                    <label for="id_privacy_policy_accepted">
+                        Я даю согласие на
+                        <a href="{% url 'policy' %}" target="_blank">обработку персональных данных</a>
+                    </label>
+                </div>
+
+<button type="submit">Отправить</button>
+<button type="button" class="btn-close">Закрыть</button>
+
+            </div>
+            <div class="form-success-message" style="display: none;">
+                <p>Форма отправлена, ваша заявка будет рассмотрена в ближайшее время.</p>
+                <p>Ждем вас на аукционе!</p>
+                <button type="button" class="btn-close">Закрыть</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Модальное окно для ставки (изначально скрыто) -->
+<div class="modal-overlay" id="makeBidModal">
+    <div class="modal-content">
+        <form id="bidForm" method="POST"> <!-- action будет задан через JS -->
+            {% csrf_token %}
+            <h3>Предложение ставки</h3>
+            <div class="form-body">
+                <input type="text" name="bidder_name" placeholder="Ваше ФИО / Псевдоним" required>
+                <input type="email" name="bidder_email" placeholder="Ваш Email" required>
+                <select name="amount" required>
+                    {% for option in bid_options %}
+                        <option value="{{ option }}">{{ option }} руб.</option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Отправить</button>
+                <button type="button" class="btn-close">Закрыть</button>
+            </div>
+            <div class="form-success-message" style="display: none;">
+                <p>Форма отправлена, ваша заявка будет рассмотрена. Ответ придет вам на почту.</p>
+                <p>Ждем вас на аукционе!</p>
+                <button type="button" class="btn-close">Закрыть</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

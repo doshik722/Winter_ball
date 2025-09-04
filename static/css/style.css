@@ -1,0 +1,497 @@
+/* --- Глобальные настройки и фон --- */
+body {
+    /* ЗАМЕНИТЕ ЭТОТ URL НА СВОЙ */
+    background-attachment: fixed;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    margin: 0;
+    color: #333;
+}
+
+/* --- Основная обертка страницы --- */
+.page-wrapper {
+    width: 100%;
+}
+
+/* --- Заголовок --- */
+.main-header {
+    text-align: center;
+    padding: 40px 20px;
+    font-size: 3.5em;
+    color: #D4AF37; /* Золотой цвет */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    font-family: 'Times New Roman', serif;
+}
+
+
+/* --- Контейнер для ленты новостей --- */
+.feed-container {
+    max-width: 800px; /* Ограничиваем ширину ленты */
+    margin: 0 auto;   /* ЭТА СТРОКА ЦЕНТРИРУЕТ ЛЕНТУ! */
+    padding: 20px;
+}
+
+.post-card {
+    background: rgba(255, 255, 255, 0.7); /* Слегка прозрачный фон для читаемости */
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 40px;
+    padding: 25px;
+    backdrop-filter: blur(4px);
+    text-decoration: none;
+    color: #2c3e50;
+}
+
+
+.post-content.collapsed {
+    max-height: 100px; /* Ограничение высоты будет применяться только при наличии этого класса */
+}
+
+
+.post-card .post-content {
+    overflow: hidden;
+    position: relative;
+    transition: max-height 0.5s ease-in-out;
+    line-height: 1.6;
+}
+
+.post-card .read-more {
+    color: #007bff;
+    cursor: pointer;
+    margin-top: 10px;
+    font-style: italic;
+    display: inline-block; /* Чтобы margin-top сработал */
+}
+
+
+/* --- СТИЛИ ДЛЯ МЕНЮ --- */
+
+.menu-container {
+    position: fixed;
+    top: 25%;
+    left: 12%;
+    transform: translate(-50%);
+    z-index: 1000;
+
+    background: rgba(255, 255, 255, 0);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+
+    /* Плавные переходы для всех анимаций */
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.menu-nav a {
+    display: block; /* Заставляет ссылки быть друг под другом */
+    text-decoration: none;
+    color: #D4AF37;
+    font-size: 1.2em;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+/* Убираем отступ у последней ссылки */
+.menu-nav a:last-child {
+    margin-bottom: 0;
+}
+.menu-nav nav ul{
+    justify-content: space-between;
+}
+
+.menu-nav a:hover {
+    color: #007bff;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.menu-icon {
+    font-size: 32px;
+    cursor: pointer;
+    display : none; /* Иконка по умолчанию скрыта */
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    color: #D4AF37;
+
+
+}
+
+/* --- Стили для свернутого меню --- */
+.menu-container.collapsed {
+    width: 60px;
+    height: 60px;
+    padding: 10px;
+    border-radius: 50%; /* Делаем круглым */
+}
+
+.menu-container.collapsed .menu-nav {
+    /* Прячем навигацию, когда меню свернуто */
+    opacity: 0;
+    visibility: hidden;
+    height: 0;
+    overflow: hidden;
+
+
+}
+
+.menu-container.collapsed .menu-icon {
+    /* Показываем иконку, когда меню свернуто */
+    display: block;
+}
+
+
+/* --- Стили для следа мышки --- */
+.cursor-trail {
+    position: fixed; /* Используем fixed для независимости от скролла */
+    width: 40px;
+    height: 40px;
+    background-size: cover;
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.5s ease-out;
+    opacity: 0;
+    z-index: 9999;
+}
+.video-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -100; /* Убедитесь, что значение ниже чем у основного контента */
+    overflow: hidden;
+}
+
+.video-background video {
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover;
+}
+/* --- Стили для страницы аукциона --- */
+.auction-page {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+}
+.auction-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #D4AF37;
+    padding-bottom: 20px;
+}
+.auction-header h2 {
+    font-family: 'Times New Roman', serif;
+    font-size: 2.5em;
+    color: #fff;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+}
+.lots-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+}
+.lot-card {
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+}
+.lot-media img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+.lot-card h3 {
+    padding: 15px 15px 5px;
+    margin: 0;
+}
+.lot-description {
+    padding: 0 15px;
+    flex-grow: 1; /* Растягиваем блок, чтобы кнопки были внизу */
+    max-height: 60px;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+}
+.lot-card .read-more {
+    padding: 0 15px;
+    color: #007bff;
+    cursor: pointer;
+    font-style: italic;
+}
+.btn-add-lot, .btn-make-bid {
+    background-color: #D4AF37;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.2s;
+}
+.btn-make-bid {
+    margin: 15px;
+}
+.btn-add-lot:hover, .btn-make-bid:hover {
+    background-color: #b89a30;
+}
+
+/* --- Стили для модальных окон --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+.modal-content {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+}
+.modal-content h3 {
+    margin-top: 0;
+}
+.modal-content form input,
+.modal-content form textarea,
+.modal-content form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+.modal-content form button {
+    margin-right: 10px;
+}
+.btn-close {
+    background: #6c757d;
+}
+
+
+.static-page-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 10px;
+}
+.static-page-content {
+    line-height: 1.7;
+    font-size: 1.1em;
+}
+
+.form-check {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.form-check input[type="checkbox"] {
+    width: auto; /* Возвращаем нормальную ширину для чекбокса */
+    margin-right: 10px;
+}
+.form-check label a {
+    color: #007bff;
+    text-decoration: none;
+}
+.form-check label a:hover {
+    text-decoration: underline;
+}
+
+.admin-edit-panel {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+.post-card:hover .admin-edit-panel {
+    opacity: 1;
+}
+
+.edit-btn, .save-btn, .cancel-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 5px;
+}
+.save-btn { background: #28a745; }
+.cancel-btn { background: #6c757d; }
+
+/* Добавляем относительное позиционирование, чтобы панель была внутри карточки */
+.post-card {
+    position: relative;
+}
+.post-title-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.post-title-container h2 {
+    margin: 0;
+}
+
+.post-detail-link {
+    font-size: 2em;
+    text-decoration: none;
+    color: #007bff;
+    transition: transform 0.2s;
+}
+
+.post-detail-link:hover {
+    transform: translateX(5px);
+}
+
+/* Стили для режима редактирования */
+.editable[contenteditable="true"] {
+    outline: 2px dashed #007bff;
+    padding: 5px;
+    background-color: #f8f9fa;
+}
+
+.post-card.is-editing {
+    border: 2px solid #007bff;
+}
+
+.media-item-edit {
+    position: relative;
+    display: inline-block;
+}
+
+/* Стили для кнопки "удалить" */
+.delete-media-btn {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.2s, transform 0.2s;
+    border: 1px solid white;
+}
+.delete-media-btn:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* Стиль для "удаленного" элемента */
+.media-item-edit.marked-for-deletion {
+    opacity: 0.4;
+    border: 2px dashed red;
+}
+
+/* Стили для поля загрузки новых файлов */
+.new-media-uploader {
+    margin-top: 15px;
+    padding: 15px;
+    border: 2px dashed #ccc;
+    border-radius: 5px;
+}
+
+.admin-create-panel {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-create-post {
+    background-color: #28a745; /* Зеленый цвет для создания */
+    color: #fff;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn-create-post:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+.post-content, .lot-description {
+    transition: max-height 0.5s ease-in-out;
+}
+
+.post-media-gallery img,
+.post-media-gallery video {
+    display: block;      /* Убираем лишние отступы под элементом */
+    width: 100%;         /* ГЛАВНОЕ: Растягиваем на всю ширину родительского .media-item */
+    height: 250px;       /* Задаем фиксированную высоту для единообразия */
+    object-fit: cover;   /* ГЛАВНОЕ: Масштабируем, чтобы заполнить контейнер, обрезая лишнее */
+    border-radius: 8px;  /* Скругляем углы */
+}
+
+/* 1. Делаем карточку точкой отсчета для позиционирования */
+.post-card {
+    position: relative; /* ОБЯЗАТЕЛЬНО! */
+}
+
+/* 2. Стили для самой растянутой ссылки */
+.stretched-link::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1; /* Помещаем ссылку над фоном, но под кнопками */
+    content: "";
+    /* Можно добавить легкий эффект при наведении на всю карточку */
+    transition: background-color 0.2s;
+}
+
+.post-card:hover .stretched-link::after {
+    background-color: rgba(0, 0, 0, 0.03);
+}
+
+
+/* 3. Делаем все интерактивные элементы "выше" ссылки */
+.admin-edit-panel,
+.read-more,
+.post-media-gallery video, /* Делаем элементы управления видео кликабельными */
+.editable[contenteditable="true"] /* В режиме редактирования текст тоже должен быть "выше" */
+{
+    position: relative; /* Это нужно, чтобы z-index сработал */
+    z-index: 2; /* Помещаем эти элементы НАД невидимой ссылкой */
+}
